@@ -39,9 +39,10 @@ public class MyPlayerController : MonoBehaviour {
 		//Vector3 vNewInput = new Vector3(Input.GetAxis("right joystick 1 horizontal"), Input.GetAxis("right joystick 1 vertical"), 0.0f);
 		angle = Mathf.Atan2(Input.GetAxis("right joystick 1 horizontal"), Input.GetAxis("right joystick 1 vertical")) * Mathf.Rad2Deg;
 
-		if (angle != 0) {
-			oldAngle = angle;
 
+		// Dead Zone
+		if(Input.GetAxis("right joystick 1 horizontal") > 0.3 || Input.GetAxis("right joystick 1 vertical") > 0.3 || Input.GetAxis("right joystick 1 horizontal") < -0.3 || Input.GetAxis("right joystick 1 vertical") < -0.3){
+			oldAngle = angle;
 		}
 
 
