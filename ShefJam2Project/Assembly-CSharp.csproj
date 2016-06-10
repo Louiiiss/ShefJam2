@@ -48,6 +48,8 @@
      <Compile Include="Assets\Scripts\BannerController.cs" />
      <Compile Include="Assets\Scripts\BulletController.cs" />
      <Compile Include="Assets\Scripts\EventHandler.cs" />
+     <Compile Include="Assets\Scripts\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\MusicPlayer.cs" />
      <Compile Include="Assets\Scripts\MyPlayerController.cs" />
      <Compile Include="Assets\Scripts\MyPlayerController2.cs" />
      <Compile Include="Assets\Scripts\P1AmmoKeeper.cs" />
@@ -55,6 +57,8 @@
      <Compile Include="Assets\Scripts\P2AmmoKeeper.cs" />
      <Compile Include="Assets\Scripts\P2ScoreKeeper.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\ReplayManager.cs" />
+     <Compile Include="Assets\Scripts\ShieldController.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

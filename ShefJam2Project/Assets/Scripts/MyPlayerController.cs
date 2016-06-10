@@ -36,6 +36,13 @@ public class MyPlayerController : MonoBehaviour {
 	private int currentLayer;
 	private Collider2D playerCol;
 	private P1AmmoKeeper P1Ammo;
+	private Animator animator;
+
+
+	public AudioClip fireSound;
+	public AudioClip explosionSound;
+	public AudioClip dodgeSound;
+
 
 	private GameObject s;
 	private int ammo = 5;
@@ -53,8 +60,8 @@ public class MyPlayerController : MonoBehaviour {
 		curammo = ammo;
 
 		distance = new Vector3(2,0,0);
-		shieldDistance = new Vector3(0.7f,0,0);
-		bulletDistance = new Vector3(1f,0,0);
+		shieldDistance = new Vector3(0.5f,0,0);
+		bulletDistance = new Vector3(1.5f,0,0);
 		dashDistance = new Vector3(3,0,0);
 		thisTransform = transform;
 		startPos = thisTransform.position;
@@ -66,6 +73,8 @@ public class MyPlayerController : MonoBehaviour {
 		P1Ammo = GameObject.Find("P1 Ammo").GetComponent<P1AmmoKeeper>();
 
 		playerCol = this.GetComponent<Collider2D>();
+
+		animator = this.GetComponent<Animator>();
 
 	}
 
@@ -95,7 +104,22 @@ public class MyPlayerController : MonoBehaviour {
 		}
 
 
+		if (inputDirection.y > 0) {
+			animator.SetInteger("Direction", 2);
+		}
+		else if (inputDirection.x < 0){
+			animator.SetInteger("Direction", 3);
+		}
+		else if (inputDirection.x > 0){
+			animator.SetInteger("Direction", 1);
+		}
+		else {
+			animator.SetInteger("Direction", 0);
+		}
+
+
 		if(Input.GetButtonDown("A 1 Button") && dashCooldown < 0){
+			AudioSource.PlayClipAtPoint(dodgeSound, transform.position);
 			dashTime = 0.1f;
 			Dash(LSoldAngle);
 			Invulnerable(playerCol);
@@ -136,6 +160,7 @@ public class MyPlayerController : MonoBehaviour {
 		if(Input.GetAxis("RT 1")>0.2){
 			if (s==null){
 				if(fireCooldown < 0 && curreloadTime < 0){
+					AudioSource.PlayClipAtPoint(fireSound, transform.position);
 					Fire();
 					curammo --;
 					P1Ammo.Reduce();
@@ -143,7 +168,7 @@ public class MyPlayerController : MonoBehaviour {
 				}
 				if(curammo == 0){
 					Reload();
-					P1Ammo.Reset();	
+					P1Ammo.Reset();
 				}
 			}
 		} 
@@ -184,8 +209,9 @@ public class MyPlayerController : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D col){
 		
-		if(col.gameObject.name == "Bullet(Clone)" ){
+		if(col.gameObject.tag == "bullet" ){
 			Debug.Log("Hit " + col.gameObject.name);
+			AudioSource.PlayClipAtPoint(explosionSound, transform.position);
 			p2score.Increment();
 			DestroyAll();
 			handler.InitialiseNextPhase();

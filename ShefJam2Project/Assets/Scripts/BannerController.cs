@@ -6,6 +6,7 @@ public class BannerController : MonoBehaviour {
 
 	public static int BannerVal;
 	Text BannerText;
+	public AudioClip phaseSound;
 
 	// Use this for initialization
 	void Start () {
@@ -23,6 +24,7 @@ public class BannerController : MonoBehaviour {
 	}
 
 	public void ShowBanner() {
+		AudioSource.PlayClipAtPoint(phaseSound, Vector3.zero);
 		BannerText.text = "PHASE " + BannerVal.ToString();
 	}
 

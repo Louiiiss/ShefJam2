@@ -4,6 +4,7 @@ using System.Collections;
 
 public class P1ScoreKeeper : MonoBehaviour {
 
+	private LevelManager lm;
 	public static int P1Val;
 	Text P1Score;
 
@@ -11,6 +12,7 @@ public class P1ScoreKeeper : MonoBehaviour {
 	void Start () {
 		P1Val = 0;
 		P1Score = gameObject.GetComponent<Text>();
+		lm = GameObject.FindObjectOfType<LevelManager>();
 	}
 
 	public void Increment(){
@@ -23,5 +25,8 @@ public class P1ScoreKeeper : MonoBehaviour {
 
 	void Update(){
 		P1Score.text = P1Val.ToString();
+		if (P1Val >= 10){
+			lm.LoadNextLevel();
+		}
 	}
 }
