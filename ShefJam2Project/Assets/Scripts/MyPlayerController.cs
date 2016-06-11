@@ -37,12 +37,15 @@ public class MyPlayerController : MonoBehaviour {
 	private Collider2D playerCol;
 	private P1AmmoKeeper P1Ammo;
 	private Animator animator;
+	public GameObject death;
 
 
 	public AudioClip fireSound;
 	public AudioClip explosionSound;
 	public AudioClip dodgeSound;
 
+	bool permInv = false;
+	public MyPlayerController2 mpc;
 
 	private GameObject s;
 	private int ammo = 5;
@@ -61,7 +64,7 @@ public class MyPlayerController : MonoBehaviour {
 
 		distance = new Vector3(2,0,0);
 		shieldDistance = new Vector3(0.5f,0,0);
-		bulletDistance = new Vector3(1.5f,0,0);
+		bulletDistance = new Vector3(1.75f,0,0);
 		dashDistance = new Vector3(3,0,0);
 		thisTransform = transform;
 		startPos = thisTransform.position;
@@ -69,6 +72,7 @@ public class MyPlayerController : MonoBehaviour {
 		aimer = Instantiate(aimer, thisTransform.position + distance, Quaternion.identity) as GameObject;
 		p2score = GameObject.Find("P2 Score").GetComponent<P2ScoreKeeper>();
 
+		mpc = GameObject.Find("Player 2(Clone)").GetComponent<MyPlayerController2>();
 		handler = GameObject.Find("EventHandler").GetComponent<EventHandler>();
 		P1Ammo = GameObject.Find("P1 Ammo").GetComponent<P1AmmoKeeper>();
 
@@ -92,8 +96,12 @@ public class MyPlayerController : MonoBehaviour {
 		}
 
 		inputDirection = Vector3.zero;
-		inputDirection.x = Input.GetAxis("left joystick 1 horizontal");
-		inputDirection.y = -(Input.GetAxis("left joystick 1 vertical"));
+		if (Input.GetAxis("left joystick 1 horizontal")*0.5f > 0.2 || Input.GetAxis("left joystick 1 horizontal")*0.5f < -0.2 ){
+			inputDirection.x = Input.GetAxis("left joystick 1 horizontal")*0.5f;
+		}
+		if (Input.GetAxis("left joystick 1 vertical")*0.5f > 0.2 || Input.GetAxis("left joystick 1 vertical")*0.6f < -0.2 ){
+			inputDirection.y = -(Input.GetAxis("left joystick 1 vertical"))*0.5f;
+		}
 
 
 		LSangle = Mathf.Atan2(Input.GetAxis("left joystick 1 horizontal"), Input.GetAxis("left joystick 1 vertical")) * Mathf.Rad2Deg;
@@ -125,10 +133,10 @@ public class MyPlayerController : MonoBehaviour {
 			Invulnerable(playerCol);
 
 		}
-		else if (dashTime < 0) {
+		else if (dashTime < 0 ) {
 			thisTransform.position += inputDirection * 0.2f;
 			thisTransform.rotation = Quaternion.identity;
-			if (dashTime <= -0.2){
+			if (dashTime <= -0.2 && !permInv){
 				Vulnerable(playerCol);
 			}
 		}
@@ -210,10 +218,13 @@ public class MyPlayerController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D col){
 		
 		if(col.gameObject.tag == "bullet" ){
+
+			Instantiate(death, this.transform.position, Quaternion.identity);
 			Debug.Log("Hit " + col.gameObject.name);
 			AudioSource.PlayClipAtPoint(explosionSound, transform.position);
 			p2score.Increment();
 			DestroyAll();
+			mpc.makeInv();
 			handler.InitialiseNextPhase();
 		}
 	}
@@ -237,6 +248,11 @@ public class MyPlayerController : MonoBehaviour {
 	void Reload(){
 		curammo = ammo;
 		curreloadTime = reloadTime;
+	}
+
+	public void makeInv(){
+		permInv = true;
+		Invulnerable(playerCol);
 	}
 
 }

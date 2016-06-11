@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
+	public static int ending;
 
 	public void loadLevel (string name) {
 	Debug.Log("Level load requested for: " + name);
@@ -16,6 +17,10 @@ public class LevelManager : MonoBehaviour {
 	public void LoadNextLevel(){
 		Application.LoadLevel(Application.loadedLevel + 1);
 	}
-	
+
+	public void setWinner(int num){
+		ending = num;
+	}
+		
 
 }

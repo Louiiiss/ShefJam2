@@ -16,6 +16,8 @@ public class EventHandler : MonoBehaviour {
 	private bool spawned ;
 	private P1AmmoKeeper P1Ammo;
 	private P2AmmoKeeper P2Ammo;
+	float delay;
+	bool goDelay = false;
 
 	// Use this for initialization
 	void Start () {
@@ -47,7 +49,10 @@ public class EventHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		counter -= Time.deltaTime;
-
+		if (goDelay) {
+			delay -= Time.deltaTime;
+		}
+	
 		if (counter <= 0){
 			bc.HideBanner();
 			if (!spawned){
@@ -56,9 +61,23 @@ public class EventHandler : MonoBehaviour {
 				spawned=true;
 			}
 		}
+
+		if (delay < 0){
+			goDelay = false;
+			delay = 0;
+			NextPhaseActual();
+		}
+
 	}
 
 	public void InitialiseNextPhase(){
+		delay = 1f;
+		goDelay = true;
+
+
+	}
+
+	public void NextPhaseActual(){
 		DestroyEverything();
 		spawned = false;
 		bc.Increment();
@@ -66,10 +85,8 @@ public class EventHandler : MonoBehaviour {
 		counter = 1.5f;
 		P1Ammo.Reset();	
 		P2Ammo.Reset();	
-/*		p1.transform.position = p1Spawn.transform.position;
+		/*		p1.transform.position = p1Spawn.transform.position;
 		p2.transform.position = p2Spawn.transform.position;*/
-
-
 	}
 
 	void DestroyEverything(){
@@ -79,6 +96,11 @@ public class EventHandler : MonoBehaviour {
 		foreach(GameObject bullet in GameObject.FindGameObjectsWithTag("bullet")){
 			Destroy(bullet);
 		}
+
+		foreach(GameObject death in GameObject.FindGameObjectsWithTag("death")){
+			Destroy(death);
+		}
+
 
 		foreach(GameObject aimer in GameObject.FindGameObjectsWithTag("aimer")){
 			Destroy(aimer);

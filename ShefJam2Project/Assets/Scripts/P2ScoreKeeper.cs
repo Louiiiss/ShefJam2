@@ -7,6 +7,8 @@ public class P2ScoreKeeper : MonoBehaviour {
 	private LevelManager lm;
 	public static int P2Val;
 	Text P2Score;
+	float delay;
+	bool goDelay = false;
 
 	// Use this for initialization
 	void Start () {
@@ -26,8 +28,24 @@ public class P2ScoreKeeper : MonoBehaviour {
 	void Update(){
 		P2Score.text = P2Val.ToString();
 
-		if (P2Val >= 10){
+		if (goDelay){
+			delay -= Time.deltaTime;
+		}
+
+		if (delay < 0){
+			goDelay = false;
+			delay = 0;
 			lm.LoadNextLevel();
 		}
+
+		if (P2Val >= 10 && !goDelay){
+			lm.setWinner(2);
+			delay = 1f;
+			goDelay = true;
+		}
+
+
+
+
 	}
 }
